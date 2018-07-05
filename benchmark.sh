@@ -11,7 +11,7 @@
 
 show_help() {
     echo "USAGE"
-    echo "./benchmark.sh -r <nightly_ver> -d <install_dir> -t <date_str> pkg1 [pkg2 ...]"
+    echo "./benchmark.sh -r <nightly_ver> -d <install_dir> [-t <date_str>] pkg1 [pkg2 ...]"
     echo "EXAMPLE"
     echo "./benchmark.sh -r master/x86_64-centos7-gcc62-opt/2018-07-03T2137 -d /build/athena Athena_22.0.1_x86_64-centos7-gcc62-opt"
 }
@@ -99,73 +99,73 @@ setup_ayum() {
 
     #Setup ayum repositories
     cat - >./etc/yum.repos.d/lcg.repo <<EOF
-    [lcg-repo]
-    name=LCG Repository
-    baseurl=http://lcgpackages.web.cern.ch/lcgpackages/rpms
-    prefix=${INSTALLDIR}/sw/lcg/releases
-    enabled=1
-    EOF
+[lcg-repo]
+name=LCG Repository
+baseurl=http://lcgpackages.web.cern.ch/lcgpackages/rpms
+prefix=${INSTALLDIR}/sw/lcg/releases
+enabled=1
+EOF
 
     cat - >./etc/yum.repos.d/tdaq-nightly.repo <<EOF
-    [tdaq-nightly]
-    name=nightly snapshots of TDAQ releases
-    baseurl=http://cern.ch/atlas-tdaq-sw/yum/tdaq/nightly
-    enabled=1
-    EOF
+[tdaq-nightly]
+name=nightly snapshots of TDAQ releases
+baseurl=http://cern.ch/atlas-tdaq-sw/yum/tdaq/nightly
+enabled=1
+EOF
 
     cat - >./etc/yum.repos.d/tdaq-testing.repo <<EOF
-    [tdaq-testing]
-    name=non-official updates and patches for TDAQ releases
-    baseurl=http://atlas-tdaq-sw.web.cern.ch/atlas-tdaq-sw/yum/tdaq/testing
-    enabled=1
+[tdaq-testing]
+name=non-official updates and patches for TDAQ releases
+baseurl=http://atlas-tdaq-sw.web.cern.ch/atlas-tdaq-sw/yum/tdaq/testing
+enabled=1
 
-    [dqm-common-testing]
-    name=dqm-common projects
-    baseurl=http://atlas-tdaq-sw.web.cern.ch/atlas-tdaq-sw/yum/dqm-common/testing
-    enabled=1
+[dqm-common-testing]
+name=dqm-common projects
+baseurl=http://atlas-tdaq-sw.web.cern.ch/atlas-tdaq-sw/yum/dqm-common/testing
+enabled=1
 
-    [tdaq-common-testing]
-    name=non-official updates and patches for TDAQ releases
-    baseurl=http://atlas-tdaq-sw.web.cern.ch/atlas-tdaq-sw/yum/tdaq-common/testing
-    enabled=1
-    EOF
+[tdaq-common-testing]
+name=non-official updates and patches for TDAQ releases
+baseurl=http://atlas-tdaq-sw.web.cern.ch/atlas-tdaq-sw/yum/tdaq-common/testing
+enabled=1
+EOF
 
     cat - >./etc/yum.repos.d/atlas-offline-data.repo <<EOF
-    [atlas-offline-data]
-    name=ATLAS offline data packages
-    baseurl=http://cern.ch/atlas-software-dist-eos/RPMs/data
-    enabled=1
-    EOF
+[atlas-offline-data]
+name=ATLAS offline data packages
+baseurl=http://cern.ch/atlas-software-dist-eos/RPMs/data
+enabled=1
+EOF
 
     cat - >./etc/yum.repos.d/atlas-offline-nightly.repo <<EOF
-    [atlas-offline-nightly]
-    name=ATLAS offline nightly releases
-    baseurl=http://cern.ch/atlas-software-dist-eos/RPMs/nightlies/${NIGHTLYVER}
-    prefix=${INSTALLDIR}/${DATEDIR}
-    enabled=1
-    EOF
+[atlas-offline-nightly]
+name=ATLAS offline nightly releases
+baseurl=http://cern.ch/atlas-software-dist-eos/RPMs/nightlies/${NIGHTLYVER}
+prefix=${INSTALLDIR}/${DATEDIR}
+enabled=1
+EOF
 
     # CentOS 7
     cat - >./etc/yum.repos.d/tdaq-common-centos7.repo <<EOF
-    [tdaq-common-centos7]
-    name=tdaq-common-centos7
-    baseurl=http://atlas-tdaq-sw.web.cern.ch/atlas-tdaq-sw/yum/tdaq-common/centos7
-    enabled=1
-    EOF
+[tdaq-common-centos7]
+name=tdaq-common-centos7
+baseurl=http://atlas-tdaq-sw.web.cern.ch/atlas-tdaq-sw/yum/tdaq-common/centos7
+enabled=1
+EOF
 
     cat - >./etc/yum.repos.d/dqm-common-centos7.repo <<EOF
-    [dqm-common-centos7]
-    name=dqm-common-centos7
-    baseurl=http://atlas-tdaq-sw.web.cern.ch/atlas-tdaq-sw/yum/dqm-common/centos7
-    enabled=1
-    EOF
+[dqm-common-centos7]
+name=dqm-common-centos7
+baseurl=http://atlas-tdaq-sw.web.cern.ch/atlas-tdaq-sw/yum/dqm-common/centos7
+enabled=1
+EOF
 
     cat - >./etc/yum.repos.d/tdaq-centos7.repo <<EOF
-    [tdaq-centos7]
-    name=TDAQ releases - Centos 7
-    baseurl=http://atlas-tdaq-sw.web.cern.ch/atlas-tdaq-sw/yum/tdaq/centos7
-    enabled=1
-    EOF
+[tdaq-centos7]
+name=TDAQ releases - Centos 7
+baseurl=http://atlas-tdaq-sw.web.cern.ch/atlas-tdaq-sw/yum/tdaq/centos7
+enabled=1
+EOF
 
     # Tell the user what happened:
     echo "Configured AYUM"
@@ -180,7 +180,7 @@ setup_ayum() {
 #                                Main
 set -e    # stop on errors
 
-parse_args
+parse_args "$@"
 pre_setup
 setup_ayum
 
