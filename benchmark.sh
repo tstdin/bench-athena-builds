@@ -11,7 +11,7 @@
 
 show_help() {
     echo "USAGE"
-    echo "./benchmark.sh -r <nightly_ver> -d <install_dir> [-t <date_str>] pkg1 [pkg2 ...]"
+    echo "./benchmark.sh -r <nightly_ver> -d <install_dir> [-t <date_str>] [-c <cvmfs_repo>] pkg1 [pkg2 ...]"
     echo "EXAMPLE"
     echo "./benchmark.sh -r master/x86_64-centos7-gcc62-opt/2018-07-03T2137 -d /build/athena Athena_22.0.1_x86_64-centos7-gcc62-opt"
 }
@@ -19,7 +19,7 @@ show_help() {
 parse_args() {
     OPTIND=1
 
-    while getopts ":r:d:t:" opt; do
+    while getopts ":r:d:t:c:" opt; do
         case "$opt" in
             h|\?)
                 show_help
@@ -33,6 +33,9 @@ parse_args() {
                 ;;
             t)
                 DATEDIR=$OPTARG
+                ;;
+            c)
+                CVMFS_REPO=$OPTARG
                 ;;
         esac
     done
@@ -75,7 +78,13 @@ pre_setup() {
     # Create RPM directory:
     if [ ! -d "$INSTALLDIR" ]; then
         echo "Creating directory $INSTALLDIR"
-        mkdir -p $INSTALLDIR
+
+        # If destination inside of CVMFS, start transaction
+        if [ ! -z "$CVMFS_REPO" ]; then
+            cvmfs_server transaction "$CVMFS_REPO"
+        fi
+
+        mkdir -p "$INSTALLDIR"
     fi
 
     # Get the branch name only and then the main base from it
@@ -188,22 +197,26 @@ setup_ayum
 echo 3 > /proc/sys/vm/drop_caches
 sync
 
-# Start measuring time
+# START measuring time
 START_SECONDS=$(date +%s)
 
 ayum -y install $PROJECTS
+if [ ! -z "$CVMFS_REPO" ]; then
+    cvmfs_server publish "$CVMFS_REPO"
+fi
 
-# Stop measuring time
+# STOP measuring time
 END_SECONDS=$(date +%s)
 
 ELAPSED_TIME=$((END_SECONDS - START_SECONDS))
 
 echo
-echo "#####################################################"
-echo "#                    Benchmark                      #"
-echo "#---------------------------------------------------#"
-echo " Start time: $(date --date @${START_SECONDS})        "
-echo " End time: $(date --date @${END_SECONDS})            "
-echo " TOTAL: ${ELAPSED_TIME} seconds                      "
-echo "     =: $(date --date @${ELAPSED_TIME} -u +%H:%M:%S) (hh:mm:ss)"
-echo "#####################################################"
+echo "###################################"
+echo "#            Benchmark             "
+echo "#----------------------------------"
+echo "# Start time: $(date --date @${START_SECONDS} -u '+%d.%m.%Y %T')"
+echo "# End time: $(date --date @${END_SECONDS} -u '+%d.%m.%Y %T')            "
+echo "# TOTAL: ${ELAPSED_TIME} seconds                      "
+echo "#     =: $(date --date @${ELAPSED_TIME} -u +%H:%M:%S) (hh:mm:ss)"
+echo "###################################"
+echo
