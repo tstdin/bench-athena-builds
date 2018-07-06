@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Originally:
-#     Installtion script of ATLAS CMake nightly RPMs
+#     Installation script of ATLAS CMake nightly RPMs
 #     Author: Johannes Elmsheuser, Attila Krasznahorkay
 #     Date: April 2016
 # Modified:
@@ -10,10 +10,14 @@
 #     Date: July 2018
 
 show_help() {
+    echo
     echo "USAGE"
     echo "./benchmark.sh -r <nightly_ver> -d <install_dir> [-t <date_str>] [-c <cvmfs_repo>] pkg1 [pkg2 ...]"
     echo "EXAMPLE"
     echo "./benchmark.sh -r master/x86_64-centos7-gcc62-opt/2018-07-03T2137 -d /build/athena Athena_22.0.1_x86_64-centos7-gcc62-opt"
+    echo "NOTE"
+    echo "-c is required even if there is only one CVMFS repository in order to decide whether starting a transaction is needed"
+    echo
 }
 
 parse_args() {
@@ -106,8 +110,8 @@ setup_ayum() {
     sed 's/AYUM package location.*//' yum.conf > yum.conf.fixed
     mv yum.conf.fixed yum.conf
 
-    #Setup ayum repositories
-    cat - >./etc/yum.repos.d/lcg.repo <<EOF
+    # Setup yum repositories for downloading of the packages
+    cat <<EOF > /etc/yum.repos.d/lcg.repo
 [lcg-repo]
 name=LCG Repository
 baseurl=http://lcgpackages.web.cern.ch/lcgpackages/rpms
@@ -115,14 +119,14 @@ prefix=${INSTALLDIR}/sw/lcg/releases
 enabled=1
 EOF
 
-    cat - >./etc/yum.repos.d/tdaq-nightly.repo <<EOF
+    cat <<EOF > /etc/yum.repos.d/tdaq-nightly.repo
 [tdaq-nightly]
 name=nightly snapshots of TDAQ releases
 baseurl=http://cern.ch/atlas-tdaq-sw/yum/tdaq/nightly
 enabled=1
 EOF
 
-    cat - >./etc/yum.repos.d/tdaq-testing.repo <<EOF
+    cat <<EOF > /etc/yum.repos.d/tdaq-testing.repo
 [tdaq-testing]
 name=non-official updates and patches for TDAQ releases
 baseurl=http://atlas-tdaq-sw.web.cern.ch/atlas-tdaq-sw/yum/tdaq/testing
@@ -139,14 +143,14 @@ baseurl=http://atlas-tdaq-sw.web.cern.ch/atlas-tdaq-sw/yum/tdaq-common/testing
 enabled=1
 EOF
 
-    cat - >./etc/yum.repos.d/atlas-offline-data.repo <<EOF
+    cat <<EOF > /etc/yum.repos.d/atlas-offline-data.repo
 [atlas-offline-data]
 name=ATLAS offline data packages
 baseurl=http://cern.ch/atlas-software-dist-eos/RPMs/data
 enabled=1
 EOF
 
-    cat - >./etc/yum.repos.d/atlas-offline-nightly.repo <<EOF
+    cat <<EOF > /etc/yum.repos.d/atlas-offline-nightly.repo
 [atlas-offline-nightly]
 name=ATLAS offline nightly releases
 baseurl=http://cern.ch/atlas-software-dist-eos/RPMs/nightlies/${NIGHTLYVER}
@@ -155,24 +159,55 @@ enabled=1
 EOF
 
     # CentOS 7
-    cat - >./etc/yum.repos.d/tdaq-common-centos7.repo <<EOF
+    cat <<EOF > /etc/yum.repos.d/tdaq-common-centos7.repo
 [tdaq-common-centos7]
 name=tdaq-common-centos7
 baseurl=http://atlas-tdaq-sw.web.cern.ch/atlas-tdaq-sw/yum/tdaq-common/centos7
 enabled=1
 EOF
 
-    cat - >./etc/yum.repos.d/dqm-common-centos7.repo <<EOF
+    cat <<EOF > /etc/yum.repos.d/dqm-common-centos7.repo
 [dqm-common-centos7]
 name=dqm-common-centos7
 baseurl=http://atlas-tdaq-sw.web.cern.ch/atlas-tdaq-sw/yum/dqm-common/centos7
 enabled=1
 EOF
 
-    cat - >./etc/yum.repos.d/tdaq-centos7.repo <<EOF
+    cat <<EOF > /etc/yum.repos.d/tdaq-centos7.repo
 [tdaq-centos7]
 name=TDAQ releases - Centos 7
 baseurl=http://atlas-tdaq-sw.web.cern.ch/atlas-tdaq-sw/yum/tdaq/centos7
+enabled=1
+EOF
+
+    # Additional extracted from ayum
+    cat <<EOF > /etc/yum.repos.d/tdaq.repo
+[tdaq-common-slc6]
+name=tdaq-common
+baseurl=http://atlas-tdaq-sw.web.cern.ch/atlas-tdaq-sw/yum/tdaq-common/slc6
+enabled=1
+[dqm-common-slc6]
+name=dqm-common
+baseurl=http://atlas-tdaq-sw.web.cern.ch/atlas-tdaq-sw/yum/dqm-common/slc6
+enabled=1
+[tdaq-slc6]
+name=TDAQ releases
+baseurl=http://atlas-tdaq-sw.web.cern.ch/atlas-tdaq-sw/yum/tdaq/slc6
+enabled=1
+[external]
+name=external sw
+baseurl=http://atlas-tdaq-sw.web.cern.ch/atlas-tdaq-sw/yum/external
+EOF
+
+    cat <<EOF > /etc/yum.repos.d/offline.repo
+[offline-lcg-slc6]
+name=LCG SLC6
+baseurl=http://cern.ch/atlas-software-dist-eos/RPMs/lcg/slc6/yum
+enabled=1
+
+[offline-slc6]
+name=ATLAS offline releases SLC6
+baseurl=http://atlas-computing.web.cern.ch/atlas-computing/links/reposDirectory/offline/slc6/yum
 enabled=1
 EOF
 
@@ -197,10 +232,16 @@ setup_ayum
 echo 3 > /proc/sys/vm/drop_caches
 sync
 
+# Download packages with all their dependencies to local storage
+rm -rf /root/rpm_download; mkdir /root/rpm_download
+yumdownloader --destdir=/root/rpm_download --resolve --disableplugin=protectbase $PROJECTS
+
 # START measuring time
 START_SECONDS=$(date +%s)
 
-ayum -y install $PROJECTS
+# Install the downloaded RPMs
+ayum -y localinstall --disablerepo='*' /root/rpm_download/*.rpm
+
 if [ ! -z "$CVMFS_REPO" ]; then
     cvmfs_server publish "$CVMFS_REPO"
 fi
@@ -215,8 +256,8 @@ echo "###################################"
 echo "#            Benchmark             "
 echo "#----------------------------------"
 echo "# Start time: $(date --date @${START_SECONDS} -u '+%d.%m.%Y %T')"
-echo "# End time: $(date --date @${END_SECONDS} -u '+%d.%m.%Y %T')            "
-echo "# TOTAL: ${ELAPSED_TIME} seconds                      "
+echo "# End time: $(date --date @${END_SECONDS} -u '+%d.%m.%Y %T')"
+echo "# TOTAL: ${ELAPSED_TIME} seconds   "
 echo "#     =: $(date --date @${ELAPSED_TIME} -u +%H:%M:%S) (hh:mm:ss)"
 echo "###################################"
 echo
