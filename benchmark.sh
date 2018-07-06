@@ -271,15 +271,20 @@ sync
 echo
 echo "#############################################"
 echo "Downloading packages to local repository"
+echo
 yumdownloader --destdir=/root/rpm_download --resolve --disableplugin=protectbase $PROJECTS
 createrepo /root/rpm_download
 ayum makecache --disablerepo='*' --enablerepo='rpm-download'
 
+echo
+echo "#############################################"
+echo "Starting measured installation"
+echo
 # ------------------------ START measuring time --------------------------------
 START_SECONDS=$(date +%s)
 
 # Install from the local repository
-ayum -y localinstall --disablerepo='*' --enablerepo='rpm-download' $PROJECTS
+ayum -y install --disablerepo='*' --enablerepo='rpm-download' $PROJECTS
 
 if [ ! -z "$CVMFS_REPO" ]; then
     cvmfs_server publish "$CVMFS_REPO"
