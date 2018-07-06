@@ -49,6 +49,28 @@ parse_args() {
     PROJECTS=$@
 }
 
+check_commands() {
+    if ! hash git 2>/dev/null; then
+        echo "ERROR: missing git command"
+        exit 1
+    fi
+
+    if ! hash cvmfs_server && [ ! -z "$CVMFS_REPO" ]; then
+        echo "ERROR: missing cvmfs_server command"
+        exit 1
+    fi
+
+    if ! hash yumdownloader && [ ! -z "$CVMFS_REPO" ]; then
+        echo "ERROR: missing yumdownloader command"
+        exit 1
+    fi
+
+    if ! hash createrepo && [ ! -z "$CVMFS_REPO" ]; then
+        echo "missing createrepo command"
+        exit 1
+    fi
+}
+
 pre_setup() {
     if [ ! -d "$TMPDIR" ]; then
         if [ -d "/tmp/$USER" ]; then
@@ -65,6 +87,7 @@ pre_setup() {
         DATEDIR=`date "+%FT%H%M"`
     fi
 
+    echo
     echo "#############################################"
     echo "Installing project(s) $PROJECTS"
     echo "  from nightly  : $NIGHTLYVER"
@@ -78,6 +101,9 @@ pre_setup() {
         show_help
         exit 1
     fi
+
+    # (re)create directory for local repository
+    rm -rf /root/rpm_download; mkdir /root/rpm_download
 
     # Create RPM directory:
     if [ ! -d "$INSTALLDIR" ]; then
@@ -109,6 +135,14 @@ setup_ayum() {
     # Remove the unnecessary line from the generated file:
     sed 's/AYUM package location.*//' yum.conf > yum.conf.fixed
     mv yum.conf.fixed yum.conf
+
+    # Setup local repository file to ayum (created later)
+    cat <<EOF >./etc/yum.repos.d/rpm_download.repo
+[rpm-download]
+name=Local Repository of downloaded RPMs
+baseurl=file:///root/rpm_download
+enabled=1
+EOF
 
     # Setup yum repositories for downloading of the packages
     cat <<EOF > /etc/yum.repos.d/lcg.repo
@@ -225,6 +259,7 @@ EOF
 set -e    # stop on errors
 
 parse_args "$@"
+check_commands
 pre_setup
 setup_ayum
 
@@ -233,20 +268,24 @@ echo 3 > /proc/sys/vm/drop_caches
 sync
 
 # Download packages with all their dependencies to local storage
-rm -rf /root/rpm_download; mkdir /root/rpm_download
+echo
+echo "#############################################"
+echo "Downloading packages to local repository"
 yumdownloader --destdir=/root/rpm_download --resolve --disableplugin=protectbase $PROJECTS
+createrepo /root/rpm_download
+ayum makecache --disablerepo='*' --enablerepo='rpm-download'
 
-# START measuring time
+# ------------------------ START measuring time --------------------------------
 START_SECONDS=$(date +%s)
 
-# Install the downloaded RPMs
-ayum -y localinstall --disablerepo='*' /root/rpm_download/*.rpm
+# Install from the local repository
+ayum -y localinstall --disablerepo='*' --enablerepo='rpm-download' $PROJECTS
 
 if [ ! -z "$CVMFS_REPO" ]; then
     cvmfs_server publish "$CVMFS_REPO"
 fi
 
-# STOP measuring time
+# ------------------------ STOP measuring time ---------------------------------
 END_SECONDS=$(date +%s)
 
 ELAPSED_TIME=$((END_SECONDS - START_SECONDS))
