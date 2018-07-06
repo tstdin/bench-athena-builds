@@ -55,17 +55,17 @@ check_commands() {
         exit 1
     fi
 
-    if ! hash cvmfs_server && [ ! -z "$CVMFS_REPO" ]; then
+    if ! hash cvmfs_server 2>/dev/null && [ ! -z "$CVMFS_REPO" ]; then
         echo "ERROR: missing cvmfs_server command"
         exit 1
     fi
 
-    if ! hash yumdownloader && [ ! -z "$CVMFS_REPO" ]; then
+    if ! hash yumdownloader 2>/dev/null && [ ! -z "$CVMFS_REPO" ]; then
         echo "ERROR: missing yumdownloader command"
         exit 1
     fi
 
-    if ! hash createrepo && [ ! -z "$CVMFS_REPO" ]; then
+    if ! hash createrepo 2>/dev/null && [ ! -z "$CVMFS_REPO" ]; then
         echo "missing createrepo command"
         exit 1
     fi
