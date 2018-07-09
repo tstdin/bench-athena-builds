@@ -330,3 +330,74 @@ mkdir /root/rpm_download
 # TOTAL: 971 seconds
 #     =: 00:16:11 (hh:mm:ss)
 ```
+
+---
+
+## Test 5
+
+Install *Athena_22.0.1_x86_64-centos7-gcc62-opt* from *master/x86_64-centos7-gcc62-opt/2018-07-04T2126* to remote empty CVMFS repository on CVMFS gateway (cvm-perf06) from one CVMFS release manager at a time.
+
+##### Prerequisite:
+
+  - installed cvmfs-gateway 0.2.6-1
+  - setup one GW and four RM (https://cvmfs.readthedocs.io/en/latest/cpt-repository-gateway.html)
+  - recreate the repository on GW before each test
+  - `rm -rf /root/rpm_download; mkdir /root/rpm_download`
+
+### 5a. (cvm-perf04)
+
+```
+[root@cvm-perf04 bench-athena-builds]# ./benchmark.sh -r master/x86_64-centos7-gcc62-opt/2018-07-04T2126 -d /cvmfs/athena.install_gw.repo/centos -c athena.install_gw.repo Athena_22.0.1_x86_64-centos7-gcc62-opt |tee benchmark_5a.log
+```
+
+##### Time
+
+```
+# TOTAL: 925 seconds   
+#     =: 00:15:25 (hh:mm:ss)
+```
+
+### 5b. (cvm-perf05)
+
+```
+[root@cvm-perf05 bench-athena-builds]# ./benchmark.sh -r master/x86_64-centos7-gcc62-opt/2018-07-04T2126 -d /cvmfs/athena.install_gw.repo/centos -c athena.install_gw.repo Athena_22.0.1_x86_64-centos7-gcc62-opt |tee benchmark_5b.log
+```
+
+##### Time
+
+```
+# TOTAL: 926 seconds   
+#     =: 00:15:26 (hh:mm:ss)
+```
+
+### 5c. (cvm-perf06)
+
+Not used, this is the gateway.
+
+### 5d. (cvm-perf07)
+
+```
+[root@cvm-perf07 bench-athena-builds]# ./benchmark.sh -r master/x86_64-centos7-gcc62-opt/2018-07-04T2126 -d /cvmfs/athena.install_gw.repo/centos -c athena.install_gw.repo Athena_22.0.1_x86_64-centos7-gcc62-opt |tee benchmark_5d.log
+```
+
+##### Time
+
+```
+# TOTAL: 925 seconds   
+#     =: 00:15:25 (hh:mm:ss)
+```
+
+### 5e. (cvm-perf08)
+
+```
+[root@cvm-perf08 bench-athena-builds]# ./benchmark.sh -r master/x86_64-centos7-gcc62-opt/2018-07-04T2126 -d /cvmfs/athena.install_gw.repo/centos -c athena.install_gw.repo Athena_22.0.1_x86_64-centos7-gcc62-opt |tee benchmark_5e.log
+```
+
+##### Time
+
+```
+# TOTAL: 926 seconds   
+#     =: 00:15:26 (hh:mm:ss)
+```
+
+---
