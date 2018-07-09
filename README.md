@@ -249,3 +249,84 @@ Install *Athena_22.0.1_x86_64-centos7-gcc62-opt* from *master/x86_64-centos7-gcc
 # TOTAL: 956 seconds   
 #     =: 00:15:56 (hh:mm:ss)
 ```
+
+---
+
+## Test 4
+
+Install *Athena_22.0.1_x86_64-slc6-gcc62-opt* from *master/x86_64-slc6-gcc62-opt/2018-07-04T2055* to local empty CVMFS repository.
+
+##### Prerequisite
+
+```
+cvmfs_server rmfs athena.install.repo
+rm -rf /root/rpm_download
+yum clean all
+cvmfs_server mkfs athena.install.repo
+mkdir /root/rpm_download
+```
+
+### 4a. (cvm-perf04)
+
+```
+[root@cvm-perf04 bench-athena-builds]# ./benchmark.sh -r master/x86_64-slc6-gcc62-opt/2018-07-04T2055 -d /cvmfs/athena.install.repo/slc6 -c athena.install.repo Athena_22.0.1_x86_64-slc6-gcc62-opt |tee benchmark_4a.log
+```
+
+##### Time
+
+```
+# TOTAL: 989 seconds   
+#     =: 00:16:29 (hh:mm:ss)
+```
+
+### 4b. (cvm-perf05)
+
+```
+[root@cvm-perf05 bench-athena-builds]# ./benchmark.sh -r master/x86_64-slc6-gcc62-opt/2018-07-04T2055 -d /cvmfs/athena.install.repo/slc6 -c athena.install.repo Athena_22.0.1_x86_64-slc6-gcc62-opt |tee benchmark_4b.log
+```
+
+##### Time
+
+```
+# TOTAL: 974 seconds   
+#     =: 00:16:14 (hh:mm:ss)
+```
+
+### 4c. (cvm-perf06)
+
+```
+[root@cvm-perf06 bench-athena-builds]# ./benchmark.sh -r master/x86_64-slc6-gcc62-opt/2018-07-04T2055 -d /cvmfs/athena.install.repo/slc6 -c athena.install.repo Athena_22.0.1_x86_64-slc6-gcc62-opt |tee benchmark_4c.log
+```
+
+##### Time
+
+```
+# TOTAL: 968 seconds   
+#     =: 00:16:08 (hh:mm:ss)
+```
+
+### 4d. (cvm-perf07)
+
+```
+[root@cvm-perf07 bench-athena-builds]# ./benchmark.sh -r master/x86_64-slc6-gcc62-opt/2018-07-04T2055 -d /cvmfs/athena.install.repo/slc6 -c athena.install.repo Athena_22.0.1_x86_64-slc6-gcc62-opt |tee benchmark_4d.log
+```
+
+##### Time
+
+```
+# TOTAL: 976 seconds
+#     =: 00:16:16 (hh:mm:ss)
+```
+
+### 4e. (cvm-perf07)
+
+```
+[root@cvm-perf08 bench-athena-builds]# ./benchmark.sh -r master/x86_64-slc6-gcc62-opt/2018-07-04T2055 -d /cvmfs/athena.install.repo/slc6 -c athena.install.repo Athena_22.0.1_x86_64-slc6-gcc62-opt |tee benchmark_4e.log
+```
+
+##### Time
+
+```
+# TOTAL: 971 seconds
+#     =: 00:16:11 (hh:mm:ss)
+```
