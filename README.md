@@ -1,6 +1,7 @@
 # bench-athena-builds
 
 ## Description
+
 The tests are comparing installation time with an ayum command to  destination on a local storage versus destination inside of a CVMFS repository. Also includes tests for a new feature allowing parallel CVMFS transactions from multiple release managers to single gateway.
 
 Packages are downloaded to local repository before the measuring starts. That excludes problems with network instability.
@@ -15,76 +16,79 @@ The tests were performed on five physical machines: *cvm-perf04 - cvm-perf08* ru
   - HDD: 1 TB
     - Model: SAMSUNG MZ7KM960 Rev: 003Q
 
-## Tests
-1. Install *Athena_22.0.1_x86_64-centos7-gcc62-opt* from *master/x86_64-centos7-gcc62-opt/2018-07-04T2126* to local disk.
-  - Prerequisite:
-    ```
-    rm -rf /build /root/rpm_download
-    yum clean all
-    mkdir /build
-    mkdir /root/rpm_download
-    ```
-2. Install *Athena_22.0.1_x86_64-slc6-gcc62-opt* from *master/x86_64-slc6-gcc62-opt/2018-07-04T2055* to local disk.
-  - Prerequisite:
-    ```
-    rm -rf /build /root/rpm_download
-    yum clean all
-    mkdir /build
-    mkdir /root/rpm_download
-    ```
+## Test 1
 
-## Results
+Install *Athena_22.0.1_x86_64-centos7-gcc62-opt* from *master/x86_64-centos7-gcc62-opt/2018-07-04T2126* to local disk.
+
+##### Prerequisite
+
+```
+rm -rf /build /root/rpm_download
+yum clean all
+mkdir /build
+mkdir /root/rpm_download
+```
 
 ### 1a. (cvm-perf04)
+
 ```
 [root@cvm-perf04 bench-athena-builds]# ./benchmark.sh -r master/x86_64-centos7-gcc62-opt/2018-07-04T2126 -d /build/athena Athena_22.0.1_x86_64-centos7-gcc62-opt |tee benchmark_1a.log
 ```
 
 ##### Time
+
 ```
 # TOTAL: 800 seconds   
 #     =: 00:13:20 (hh:mm:ss)
 ```
 
 ### 1b. (cvm-perf05)
+
 ```
 [root@cvm-perf05 bench-athena-builds]# ./benchmark.sh -r master/x86_64-centos7-gcc62-opt/2018-07-04T2126 -d /build/athena Athena_22.0.1_x86_64-centos7-gcc62-opt |tee benchmark_1b.log
 ```
 
 ##### Time
+
 ```
 # TOTAL: 804 seconds
 #     =: 00:13:24 (hh:mm:ss)
 ```
 
 ### 1c. (cvm-perf06)
+
 ```
 [root@cvm-perf06 bench-athena-builds]# ./benchmark.sh -r master/x86_64-centos7-gcc62-opt/2018-07-04T2126 -d /build/athena Athena_22.0.1_x86_64-centos7-gcc62-opt |tee benchmark_1c.log
 ```
 
 ##### Time
+
 ```
 # TOTAL: 802 seconds
 #     =: 00:13:22 (hh:mm:ss)
 ```
 
 ### 1d. (cvm-perf07)
+
 ```
 [root@cvm-perf07 bench-athena-builds]# ./benchmark.sh -r master/x86_64-centos7-gcc62-opt/2018-07-04T2126 -d /build/athena Athena_22.0.1_x86_64-centos7-gcc62-opt |tee benchmark_1d.log
 ```
 
 ##### Time
+
 ```
 # TOTAL: 799 seconds   
 #     =: 00:13:19 (hh:mm:ss)
 ```
 
 ### 1e. (cvm-perf08)
+
 ```
 [root@cvm-perf08 bench-athena-builds]# ./benchmark.sh -r master/x86_64-centos7-gcc62-opt/2018-07-04T2126 -d /build/athena Athena_22.0.1_x86_64-centos7-gcc62-opt |tee benchmark_1e.log
 ```
 
 ##### Time
+
 ```
 # TOTAL: 799 seconds
 #     =: 00:13:19 (hh:mm:ss)
@@ -92,59 +96,156 @@ The tests were performed on five physical machines: *cvm-perf04 - cvm-perf08* ru
 
 ---
 
+## Test 2
+
+Install *Athena_22.0.1_x86_64-slc6-gcc62-opt* from *master/x86_64-slc6-gcc62-opt/2018-07-04T2055* to local disk.
+
+##### Prerequisite
+
+```
+rm -rf /build /root/rpm_download
+yum clean all
+mkdir /build
+mkdir /root/rpm_download
+```
+
 ### 2a. (cvm-perf04)
+
 ```
 [root@cvm-perf04 bench-athena-builds]# ./benchmark.sh -r master/x86_64-slc6-gcc62-opt/2018-07-04T2055 -d /build/athena Athena_22.0.1_x86_64-slc6-gcc62-opt |tee benchmark_2a.log
 ```
 
 ##### Time
+
 ```
 # TOTAL: 823 seconds   
 #     =: 00:13:43 (hh:mm:ss)
 ```
 
 ### 2b. (cvm-perf05)
+
 ```
 [root@cvm-perf05 bench-athena-builds]# ./benchmark.sh -r master/x86_64-slc6-gcc62-opt/2018-07-04T2055 -d /build/athena Athena_22.0.1_x86_64-slc6-gcc62-opt |tee benchmark_2b.log
 ```
 
 ##### Time
+
 ```
 # TOTAL: 825 seconds
 #     =: 00:13:45 (hh:mm:ss)
 ```
 
 ### 2c. (cvm-perf06)
+
 ```
 [root@cvm-perf06 bench-athena-builds]# ./benchmark.sh -r master/x86_64-slc6-gcc62-opt/2018-07-04T2055 -d /build/athena Athena_22.0.1_x86_64-slc6-gcc62-opt |tee benchmark_2c.log
 ```
 
 ##### Time
+
 ```
 # TOTAL: 824 seconds
 #     =: 00:13:44 (hh:mm:ss)
 ```
 
 ### 2d. (cvm-perf07)
+
 ```
 [root@cvm-perf07 bench-athena-builds]# ./benchmark.sh -r master/x86_64-slc6-gcc62-opt/2018-07-04T2055 -d /build/athena Athena_22.0.1_x86_64-slc6-gcc62-opt |tee benchmark_2d.log
 ```
 
 ##### Time
+
 ```
 # TOTAL: 823 seconds
 #     =: 00:13:43 (hh:mm:ss)
 ```
 
 ### 2e. (cvm-perf08)
+
 ```
 [root@cvm-perf08 bench-athena-builds]# ./benchmark.sh -r master/x86_64-slc6-gcc62-opt/2018-07-04T2055 -d /build/athena Athena_22.0.1_x86_64-slc6-gcc62-opt |tee benchmark_2e.log
 ```
 
 ##### Time
+
 ```
 # TOTAL: 823 seconds
 #     =: 00:13:43 (hh:mm:ss)
 ```
 
 ---
+
+## Test 3
+
+Install *Athena_22.0.1_x86_64-centos7-gcc62-opt* from *master/x86_64-centos7-gcc62-opt/2018-07-04T2126* to local empty CVMFS repository.
+
+##### Prerequisite:
+
+  - CVMFS server - compiled from *devel* branch with last commit d4d6d8ce65dc4a18121145f6f92379ac4a6f0462
+  - `cvmfs_server mkfs athena.install.repo`
+
+### 3a. (cvm-perf04)
+
+```
+[root@cvm-perf04 bench-athena-builds]# ./benchmark.sh -r master/x86_64-centos7-gcc62-opt/2018-07-04T2126 -d /cvmfs/athena.install.repo/centos -c athena.install.repo Athena_22.0.1_x86_64-centos7-gcc62-opt |tee benchmark_3a.log
+```
+
+##### Time
+
+```
+# TOTAL: 948 seconds   
+#     =: 00:15:48 (hh:mm:ss)
+```
+
+### 3b. (cvm-perf05)
+
+```
+[root@cvm-perf05 bench-athena-builds]# ./benchmark.sh -r master/x86_64-centos7-gcc62-opt/2018-07-04T2126 -d /cvmfs/athena.install.repo/centos -c athena.install.repo Athena_22.0.1_x86_64-centos7-gcc62-opt |tee benchmark_3b.log
+```
+
+##### Time
+
+```
+# TOTAL: 956 seconds   
+#     =: 00:15:56 (hh:mm:ss)
+```
+
+### 3c. (cvm-perf06)
+
+```
+[root@cvm-perf06 bench-athena-builds]# ./benchmark.sh -r master/x86_64-centos7-gcc62-opt/2018-07-04T2126 -d /cvmfs/athena.install.repo/centos -c athena.install.repo Athena_22.0.1_x86_64-centos7-gcc62-opt |tee benchmark_3c.log
+```
+
+##### Time
+
+```
+# TOTAL: 955 seconds   
+#     =: 00:15:55 (hh:mm:ss)
+```
+
+### 3d. (cvm-perf07)
+
+```
+[root@cvm-perf07 bench-athena-builds]# ./benchmark.sh -r master/x86_64-centos7-gcc62-opt/2018-07-04T2126 -d /cvmfs/athena.install.repo/centos -c athena.install.repo Athena_22.0.1_x86_64-centos7-gcc62-opt |tee benchmark_3d.log
+```
+
+##### Time
+
+```
+# TOTAL: 948 seconds
+#     =: 00:15:48 (hh:mm:ss)
+```
+
+### 3e. (cvm-perf08)
+
+```
+[root@cvm-perf08 bench-athena-builds]# ./benchmark.sh -r master/x86_64-centos7-gcc62-opt/2018-07-04T2126 -d /cvmfs/athena.install.repo/centos -c athena.install.repo Athena_22.0.1_x86_64-centos7-gcc62-opt |tee benchmark_3e.log
+```
+
+##### Time
+
+```
+# TOTAL: 956 seconds   
+#     =: 00:15:56 (hh:mm:ss)
+```
