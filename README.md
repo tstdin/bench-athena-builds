@@ -18,7 +18,7 @@ The tests were performed on five physical machines: *cvm-perf04 - cvm-perf08* ru
 
 ## Test 1
 
-Install *Athena_22.0.1_x86_64-centos7-gcc62-opt* from *master/x86_64-centos7-gcc62-opt/2018-07-04T2126* to local disk.
+Install *Athena_22.0.1_x86_64-centos7-gcc62-opt* from *master/x86_64-centos7-gcc62-opt/2018-07-04T2126* to local disc.
 
 ##### Prerequisite
 
@@ -98,7 +98,7 @@ mkdir /root/rpm_download
 
 ## Test 2
 
-Install *Athena_22.0.1_x86_64-slc6-gcc62-opt* from *master/x86_64-slc6-gcc62-opt/2018-07-04T2055* to local disk.
+Install *Athena_22.0.1_x86_64-slc6-gcc62-opt* from *master/x86_64-slc6-gcc62-opt/2018-07-04T2055* to local disc.
 
 ##### Prerequisite
 
@@ -401,3 +401,70 @@ Not used, this is the gateway.
 ```
 
 ---
+
+## Test 6
+
+Install *Athena_22.0.1_x86_64-slc6-gcc62-opt* from *master/x86_64-slc6-gcc62-opt/2018-07-04T2055* to remote empty CVMFS repository on CVMFS gateway (cvm-perf06) from one CVMFS release manager at a time.
+
+##### Prerequisite:
+
+  - installed cvmfs-gateway 0.2.6-1
+  - setup one GW and four RM (https://cvmfs.readthedocs.io/en/latest/cpt-repository-gateway.html)
+  - recreate the repository on GW before each test
+  - `rm -rf /root/rpm_download; mkdir /root/rpm_download`
+
+### 6a. (cvm-perf04)
+
+```
+[root@cvm-perf04 bench-athena-builds]# ./benchmark.sh -r master/x86_64-slc6-gcc62-opt/2018-07-04T2055 -d /cvmfs/athena.install_gw.repo/slc6 -c athena.install_gw.repo Athena_22.0.1_x86_64-slc6-gcc62-opt |tee benchmark_6a.log
+```
+
+##### Time
+
+```
+# TOTAL: 950 seconds   
+#     =: 00:15:50 (hh:mm:ss)
+```
+
+### 6b. (cvm-perf05)
+
+```
+[root@cvm-perf05 bench-athena-builds]# ./benchmark.sh -r master/x86_64-slc6-gcc62-opt/2018-07-04T2055 -d /cvmfs/athena.install_gw.repo/slc6 -c athena.install_gw.repo Athena_22.0.1_x86_64-slc6-gcc62-opt |tee benchmark_6b.log
+```
+
+##### Time
+
+```
+# TOTAL: 948 seconds   
+#     =: 00:15:48 (hh:mm:ss)
+```
+
+### 6c. (cvm-perf06)
+
+Not used, this is the gateway.
+
+### 6d. (cvm-perf07)
+
+```
+[root@cvm-perf07 bench-athena-builds]# ./benchmark.sh -r master/x86_64-slc6-gcc62-opt/2018-07-04T2055 -d /cvmfs/athena.install_gw.repo/slc6 -c athena.install_gw.repo Athena_22.0.1_x86_64-slc6-gcc62-opt |tee benchmark_6d.log
+```
+
+##### Time
+
+```
+# TOTAL: 950 seconds   
+#     =: 00:15:50 (hh:mm:ss)
+```
+
+### 6e. (cvm-perf08)
+
+```
+[root@cvm-perf08 bench-athena-builds]# ./benchmark.sh -r master/x86_64-slc6-gcc62-opt/2018-07-04T2055 -d /cvmfs/athena.install_gw.repo/slc6 -c athena.install_gw.repo Athena_22.0.1_x86_64-slc6-gcc62-opt |tee benchmark_6e.log
+```
+
+##### Time
+
+```
+# TOTAL: 948 seconds   
+#     =: 00:15:48 (hh:mm:ss)
+```
