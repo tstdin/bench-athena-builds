@@ -12,18 +12,20 @@
 show_help() {
     echo
     echo "USAGE"
-    echo "./benchmark.sh -r <nightly_ver> -d <install_dir> [-t <date_str>] [-c <cvmfs_repo>] pkg1 [pkg2 ...]"
+    echo "./benchmark.sh -r <nightly_ver> -d <install_dir> [-t <date_str>] [-c <cvmfs_repo>] [-T <seconds_since_epoch>] pkg1 [pkg2 ...]"
     echo "EXAMPLE"
     echo "./benchmark.sh -r master/x86_64-centos7-gcc62-opt/2018-07-03T2137 -d /build/athena Athena_22.0.1_x86_64-centos7-gcc62-opt"
     echo "NOTE"
     echo "-c is required even if there is only one CVMFS repository in order to decide whether starting a transaction is needed"
+    echo "-T accepts seconds since 1970-01-01 UTC, used for starting parallel installations from different machines at the same time"
+    echo "    provide such a value that all machines have enough time to download all the packages and prepare for the installation"
     echo
 }
 
 parse_args() {
     OPTIND=1
 
-    while getopts ":r:d:t:c:" opt; do
+    while getopts ":r:d:t:c:T:" opt; do
         case "$opt" in
             h|\?)
                 show_help
@@ -37,6 +39,9 @@ parse_args() {
                 ;;
             t)
                 DATEDIR=$OPTARG
+                ;;
+            T)
+                START_AT=$OPTARG
                 ;;
             c)
                 CVMFS_REPO=$OPTARG
@@ -254,6 +259,26 @@ EOF
     cd $CURDIR
 }
 
+wait_for_start_time() {
+    if [ ! -z "$START_AT" ]; then
+        SECONDS_NOW=$(date +%s)
+        SECONDS_WAIT=$((START_AT - SECONDS_NOW))
+
+        echo
+        echo "#############################################"
+        echo "Time now: $(date --date @${SECONDS_NOW} -u '+%d.%m.%Y %T')"
+        echo "Waiting untill provided time: $(date --date @${START_AT} -u '+%d.%m.%Y %T')"
+        echo
+
+        if [ $SECONDS_WAIT -le 0 ]; then
+            echo "ERROR: time is not in the future"
+            exit 1
+        fi
+
+        sleep $SECONDS_WAIT
+    fi
+}
+
 ################################################################################
 #                                Main
 set -e    # stop on errors
@@ -276,10 +301,13 @@ yumdownloader --destdir=/root/rpm_download --resolve --disableplugin=protectbase
 createrepo /root/rpm_download
 ayum makecache --disablerepo='*' --enablerepo='rpm-download'
 
+wait_for_start_time
+
 echo
 echo "#############################################"
 echo "Starting measured installation"
 echo
+
 # ------------------------ START measuring time --------------------------------
 START_SECONDS=$(date +%s)
 
