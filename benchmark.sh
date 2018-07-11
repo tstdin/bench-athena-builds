@@ -17,6 +17,7 @@ show_help() {
     echo "./benchmark.sh -r master/x86_64-centos7-gcc62-opt/2018-07-03T2137 -d /build/athena Athena_22.0.1_x86_64-centos7-gcc62-opt"
     echo "NOTE"
     echo "-c is required even if there is only one CVMFS repository in order to decide whether starting a transaction is needed"
+    echo "    When testing simultaneous publications, specify repository name followed by the subtree."
     echo "-T accepts seconds since 1970-01-01 UTC, used for starting parallel installations from different machines at the same time"
     echo "    provide such a value that all machines have enough time to download all the packages and prepare for the installation"
     echo
