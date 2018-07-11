@@ -468,3 +468,60 @@ Not used, this is the gateway.
 # TOTAL: 948 seconds   
 #     =: 00:15:48 (hh:mm:ss)
 ```
+
+---
+
+## Test 7
+
+Install Athena from two release managers to one gateway (cvm-perf06) at a time:
+  - *Athena_22.0.1_x86_64-centos7-gcc62-opt* from *master/x86_64-centos7-gcc62-opt/2018-07-04T2126*
+  - *Athena_22.0.1_x86_64-slc6-gcc62-opt* from *master/x86_64-slc6-gcc62-opt/2018-07-04T2055*
+
+##### Prerequisite:
+
+  - installed cvmfs-gateway 0.2.6-1
+  - setup one GW and four RM (https://cvmfs.readthedocs.io/en/latest/cpt-repository-gateway.html)
+  - recreate the repository on GW before each test
+  - `rm -rf /root/rpm_download; mkdir /root/rpm_download`
+
+### 7ab. (cvm-perf04 + cvm-perf05)
+
+```
+[root@cvm-perf04 bench-athena-builds]# ./benchmark.sh -r master/x86_64-centos7-gcc62-opt/2018-07-04T2126 -d /cvmfs/athena.install_gw.repo/centos -c athena.install_gw.repo/centos -T 1531299600 Athena_22.0.1_x86_64-centos7-gcc62-opt |tee benchmark_7Ab.log
+[root@cvm-perf05 bench-athena-builds]# ./benchmark.sh -r master/x86_64-slc6-gcc62-opt/2018-07-04T2055 -d /cvmfs/athena.install_gw.repo/slc6 -c athena.install_gw.repo/slc6 -T 1531299600 Athena_22.0.1_x86_64-slc6-gcc62-opt |tee benchmark_7aB.log
+```
+
+##### Time
+
+  - cvm-perf04
+```
+# TOTAL: 957 seconds
+#     =: 00:15:57 (hh:mm:ss)
+```
+
+  - cvm-perf05
+```
+# TOTAL: 942 seconds
+#     =: 00:15:42 (hh:mm:ss)
+```
+
+### 7de. (cvm-perf07 + cvm-perf08)
+
+```
+[root@cvm-perf07 bench-athena-builds]# ./benchmark.sh -r master/x86_64-centos7-gcc62-opt/2018-07-04T2126 -d /cvmfs/athena.install_gw.repo/centos -c athena.install_gw.repo/centos -T 1531309800 Athena_22.0.1_x86_64-centos7-gcc62-opt |tee benchmark_7De.log
+[root@cvm-perf08 bench-athena-builds]# ./benchmark.sh -r master/x86_64-slc6-gcc62-opt/2018-07-04T2055 -d /cvmfs/athena.install_gw.repo/slc6 -c athena.install_gw.repo/slc6 -T 1531309800 Athena_22.0.1_x86_64-slc6-gcc62-opt |tee benchmark_7dE.log
+```
+
+##### Time
+
+  - cvm-perf07
+```
+# TOTAL: 942 seconds
+#     =: 00:15:42 (hh:mm:ss)
+```
+
+  - cvm-perf08
+```
+# TOTAL: 957 seconds
+#     =: 00:15:57 (hh:mm:ss)
+```
