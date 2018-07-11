@@ -16,6 +16,18 @@ The tests were performed on five physical machines: *cvm-perf04 - cvm-perf08* ru
   - HDD: 1 TB
     - Model: SAMSUNG MZ7KM960 Rev: 003Q
 
+---
+
+## Overview
+
+![plot img](plots/plot_04.png)
+![plot img](plots/plot_05.png)
+![plot img](plots/plot_06.png)
+
+In the plot above, the serial is a sum of two independent tests - *Test 5*, and *Test 6*.
+
+ ---
+
 ## Test 1
 
 Install *Athena_22.0.1_x86_64-centos7-gcc62-opt* from *master/x86_64-centos7-gcc62-opt/2018-07-04T2126* to local disc.
