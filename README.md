@@ -663,3 +663,68 @@ Not used, this is the gateway.
 # TOTAL: 1110 seconds   
 #     =: 00:18:30 (hh:mm:ss)
 ```
+
+---
+
+## Test 10
+
+Install Athena from three release managers to one gateway (cvm-perf06) at a time:
+  - *Athena_22.0.1_x86_64-centos7-gcc62-opt* from *master/x86_64-centos7-gcc62-opt/2018-07-04T2126*
+  - *Athena_22.0.1_x86_64-slc6-gcc62-opt* from *master/x86_64-slc6-gcc62-opt/2018-07-04T2055*
+  - *Athena_21.9.0_x86_64-slc6-gcc62-opt* from *21.9/x86_64-slc6-gcc62-opt/2018-07-04T2200*
+
+### 10abd. (cvm-perf04 + cvm-perf05 + cvm-perf07)
+
+```
+[root@cvm-perf04 bench-athena-builds]# ./benchmark.sh -r master/x86_64-centos7-gcc62-opt/2018-07-04T2126 -d /cvmfs/athena.install_gw.repo/centos -c athena.install_gw.repo/centos -T 1531467000 Athena_22.0.1_x86_64-centos7-gcc62-opt |tee benchmark_10Abd.log
+[root@cvm-perf05 bench-athena-builds]# ./benchmark.sh -r master/x86_64-slc6-gcc62-opt/2018-07-04T2055 -d /cvmfs/athena.install_gw.repo/slc6 -c athena.install_gw.repo/slc6 -T 1531467000 Athena_22.0.1_x86_64-slc6-gcc62-opt |tee benchmark_10aBd.log
+[root@cvm-perf07 bench-athena-builds]# ./benchmark.sh -r 21.9/x86_64-slc6-gcc62-opt/2018-07-04T2200 -d /cvmfs/athena.install_gw.repo/21.9 -c athena.install_gw.repo/21.9 -T 1531467000 Athena_21.9.0_x86_64-slc6-gcc62-opt |tee benchmark_10abD.log
+```
+
+##### Time
+
+  - cvm-perf04
+```
+# TOTAL: 962 seconds   
+#     =: 00:16:02 (hh:mm:ss)
+```
+
+  - cvm-perf05
+```
+# TOTAL: 946 seconds
+#     =: 00:15:46 (hh:mm:ss)
+```
+
+  - cvm-perf07
+```
+# TOTAL: 1102 seconds
+#     =: 00:18:22 (hh:mm:ss)
+```
+
+### 10bde. (cvm-perf05 + cvm-perf07 + cvm-perf08)
+
+```
+[root@cvm-perf05 bench-athena-builds]# ./benchmark.sh -r master/x86_64-centos7-gcc62-opt/2018-07-04T2126 -d /cvmfs/athena.install_gw.repo/centos -c athena.install_gw.repo/centos -T 1531471500 Athena_22.0.1_x86_64-centos7-gcc62-opt |tee benchmark_10Bde.log
+[root@cvm-perf07 bench-athena-builds]# ./benchmark.sh -r master/x86_64-slc6-gcc62-opt/2018-07-04T2055 -d /cvmfs/athena.install_gw.repo/slc6 -c athena.install_gw.repo/slc6 -T 1531471500 Athena_22.0.1_x86_64-slc6-gcc62-opt |tee benchmark_10bDe.log
+[root@cvm-perf08 bench-athena-builds]# ./benchmark.sh -r 21.9/x86_64-slc6-gcc62-opt/2018-07-04T2200 -d /cvmfs/athena.install_gw.repo/21.9 -c athena.install_gw.repo/21.9 -T 1531471500 Athena_21.9.0_x86_64-slc6-gcc62-opt |tee benchmark_10bdE.log
+```
+
+##### Time
+
+  - cvm-perf05
+```
+# TOTAL: 940 seconds   
+#     =: 00:15:40 (hh:mm:ss)
+```
+
+  - cvm-perf07
+```
+# TOTAL: 956 seconds
+#     =: 00:15:56 (hh:mm:ss)
+```
+
+  - cvm-perf08
+```
+# TOTAL: 1107 seconds   
+#     =: 00:18:27 (hh:mm:ss)
+```
