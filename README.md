@@ -538,6 +538,8 @@ Install Athena from two release managers to one gateway (cvm-perf06) at a time:
 #     =: 00:15:57 (hh:mm:ss)
 ```
 
+---
+
 > For more simultaneous tests we need to add more packages. Now there will follow several tests from just 1 RM.
 
 ## Test 8
@@ -570,6 +572,10 @@ Install *Athena_21.9.0_x86_64-slc6-gcc62-opt* from *21.9/x86_64-slc6-gcc62-opt/2
 #     =: 00:18:38 (hh:mm:ss)
 ```
 
+### 8c. (cvm-perf06)
+
+Not used, this is the gateway.
+
 ### 8d. (cvm-perf07)
 
 ```
@@ -594,4 +600,66 @@ Install *Athena_21.9.0_x86_64-slc6-gcc62-opt* from *21.9/x86_64-slc6-gcc62-opt/2
 ```
 # TOTAL: 1112 seconds   
 #     =: 00:18:32 (hh:mm:ss)
+```
+
+---
+
+## Test 9
+
+Install *Athena_21.0.75_x86_64-slc6-gcc62-opt* from *21.0/x86_64-slc6-gcc62-opt/2018-07-04T2208* to remote empty CVMFS repository on CVMFS gateway (cvm-perf06) from one CVMFS release manager at a time.
+
+### 9a. (cvm-perf04)
+
+```
+[root@cvm-perf04 bench-athena-builds]# ./benchmark.sh -r 21.0/x86_64-slc6-gcc62-opt/2018-07-04T2208 -d /cvmfs/athena.install_gw.repo/21.0 -c athena.install_gw.repo Athena_21.0.75_x86_64-slc6-gcc62-opt |tee benchmark_9a.log
+```
+
+##### Time
+
+```
+# TOTAL: 1113 seconds   
+#     =: 00:18:33 (hh:mm:ss)
+```
+
+### 9b. (cvm-perf05)
+
+```
+[root@cvm-perf05 bench-athena-builds]# ./benchmark.sh -r 21.0/x86_64-slc6-gcc62-opt/2018-07-04T2208 -d /cvmfs/athena.install_gw.repo/21.0 -c athena.install_gw.repo Athena_21.0.75_x86_64-slc6-gcc62-opt |tee benchmark_9b.log
+```
+
+##### Time
+
+```
+# TOTAL: 1112 seconds   
+#     =: 00:18:32 (hh:mm:ss)
+```
+
+### 9c. (cvm-perf06)
+
+Not used, this is the gateway.
+
+### 9d. (cvm-perf07)
+
+```
+[root@cvm-perf07 bench-athena-builds]# ./benchmark.sh -r 21.0/x86_64-slc6-gcc62-opt/2018-07-04T2208 -d /cvmfs/athena.install_gw.repo/21.0 -c athena.install_gw.repo Athena_21.0.75_x86_64-slc6-gcc62-opt |tee benchmark_9d.log
+```
+
+##### Time
+
+```
+# TOTAL: 1110 seconds   
+#     =: 00:18:30 (hh:mm:ss)
+```
+
+### 9e. (cvm-perf08)
+
+```
+[root@cvm-perf08 bench-athena-builds]# ./benchmark.sh -r 21.0/x86_64-slc6-gcc62-opt/2018-07-04T2208 -d /cvmfs/athena.install_gw.repo/21.0 -c athena.install_gw.repo Athena_21.0.75_x86_64-slc6-gcc62-opt |tee benchmark_9e.log
+```
+
+##### Time
+
+```
+# TOTAL: 1110 seconds   
+#     =: 00:18:30 (hh:mm:ss)
 ```
